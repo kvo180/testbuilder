@@ -10,6 +10,10 @@ var FILL_ME_IN = 'Fill this value in';
 var numString = '123456789012345678901234567890';
 var expect = chai.expect;
 
+function makeString(length) {
+  return numString.substr(0, length);
+}
+
 // describe('Introduction to Mocha Tests - READ ME FIRST', function() {
 //   // A Mocha test is just a function!
 //   // If the function throws an error when run, it fails.
@@ -44,8 +48,8 @@ var expect = chai.expect;
 //   });
 // });
 
+// The Diner's Club network always starts with a 38 or 39 and is 14 digits long
 describe('Diner\'s Club', function() {
-  // Be careful, tests can have bugs too...
 
   it('has a prefix of 38 and a length of 14', function() {
     expect(detectNetwork('38345678901234')).to.equal('Diner\'s Club')
@@ -56,6 +60,7 @@ describe('Diner\'s Club', function() {
   });
 });
 
+// The American Express network always starts with a 34 or 37 and is 15 digits
 describe('American Express', function() {
 
   it('has a prefix of 34 and a length of 15', function() {
@@ -67,6 +72,7 @@ describe('American Express', function() {
   });
 });
 
+// Visa always has a prefix of 4 and a length of 13, 16, or 19
 describe('Visa', function() {
 
   it('has a prefix of 4 and a length of 13', function() {
@@ -100,6 +106,7 @@ describe('Visa', function() {
   // }
 });
 
+// MasterCard always has a prefix of 51, 52, 53, 54, or 55 and a length of 16
 describe('MasterCard', function() {
 
   it('has a prefix of 51 and a length of 16', function() {
@@ -124,33 +131,39 @@ describe('MasterCard', function() {
 
 });
 
+// Discover always has a prefix of 6011, 644-649, or 65, and a length of 16 or 19
 describe('Discover', function() {
   // Tests without a function will be marked as "pending" and not run
   // Implement these tests (and others) and make them pass!
 
-  for (var i = 16; i <= 19; i += 3) {
+  for (var i = 644; i <= 649; i++) {
+
     (function(i) {
-      for (var j = 644; j <= 649; j++) {
-        var cardNum = j.toString() + numString.substr(0, i - 3);
-
-        (function(i, j) {
-          it('has a prefix of ' + j.toString() + ' and a length of ' + i.toString(), function() {
-            expect(detectNetwork(cardNum)).to.equal('Discover');
-          });
-        })(i, j)
-    }
-
-      it('has a prefix of 6011 and a length of ' + i.toString(), function() {
-        expect(detectNetwork('6011' + numString.substr(0, i - 4))).to.equal('Discover');
+      it('has a prefix of ' + i.toString() + ' and a length of 16', function() {
+        expect(detectNetwork(i.toString() + makeString(13))).to.equal('Discover');
       });
 
-      it('has a prefix of 65 and a length of ' + i.toString(), function() {
-        expect(detectNetwork('65' + numString.substr(0, i - 2))).to.equal('Discover');
+      it('has a prefix of ' + i.toString() + ' and a length of 19', function() {
+        expect(detectNetwork(i.toString() + makeString(16))).to.equal('Discover');
       });
     })(i)
   }
+
+  for (var j = 16; j <= 19; j += 3) {
+
+    (function(j) {
+      it('has a prefix of 6011 and a length of ' + j.toString(), function() {
+        expect(detectNetwork('6011' + makeString(j - 4))).to.equal('Discover');
+      });
+
+      it('has a prefix of 65 and a length of ' + j.toString(), function() {
+        expect(detectNetwork('65' + makeString(j - 2))).to.equal('Discover');
+      });
+    })(j)
+  }
 });
 
+// Maestro always has a prefix of 5018, 5020, 5038, or 6304, and a length of 12-19
 describe('Maestro', function() {
 
   for (var i = 12; i <= 19; i++) {
