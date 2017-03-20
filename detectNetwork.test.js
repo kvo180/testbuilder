@@ -86,24 +86,6 @@ describe('Visa', function() {
   it('has a prefix of 4 and a length of 19', function() {
     expect(detectNetwork('4123456789012345678')).to.equal('Visa');
   });
-
-
-
-  // for (var i = 40; i <= 49; i++) {
-  //   (function(i) {
-  //     it('has a prefix of ' + i.toString() + ' and a length of 13', function() {
-  //       assert(detectNetwork(i.toString() + '23456789012') === 'Visa');
-  //     });
-
-  //     it('has a prefix of ' + i.toString() + ' and a length of 16', function() {
-  //       assert(detectNetwork(i.toString() + '23456789012345') === 'Visa');
-  //     });
-
-  //     it('has a prefix of ' + i.toString() + ' and a length of 19', function() {
-  //     assert(detectNetwork(i.toString() + '23456789012345678') === 'Visa');
-  //     });
-  //   })(i)
-  // }
 });
 
 // MasterCard always has a prefix of 51, 52, 53, 54, or 55 and a length of 16
@@ -169,23 +151,84 @@ describe('Maestro', function() {
   for (var i = 12; i <= 19; i++) {
     (function(i) {
       it('has a prefix of 5018 and a length of ' + i.toString(), function() {
-        expect(detectNetwork('5018' + numString.substr(0, i - 4))).to.equal('Maestro');
+        expect(detectNetwork('5018' + makeString(i - 4))).to.equal('Maestro');
       });
 
       it('has a prefix of 5020 and a length of ' + i.toString(), function() {
-        expect(detectNetwork('5020' + numString.substr(0, i - 4))).to.equal('Maestro');
+        expect(detectNetwork('5020' + makeString(i - 4))).to.equal('Maestro');
       });
 
       it('has a prefix of 5038 and a length of ' + i.toString(), function() {
-        expect(detectNetwork('5038' + numString.substr(0, i - 4))).to.equal('Maestro');
+        expect(detectNetwork('5038' + makeString(i - 4))).to.equal('Maestro');
       });
 
       it('has a prefix of 6304 and a length of ' + i.toString(), function() {
-        expect(detectNetwork('6304' + numString.substr(0, i - 4))).to.equal('Maestro');
+        expect(detectNetwork('6304' + makeString(i - 4))).to.equal('Maestro');
       });
     })(i)
   }
 });
 
-describe('should support China UnionPay')
-describe('should support Switch')
+// China UnionPay always has a prefix of 622126-622925, 624-626, or 6282-6288 and a length of 16-19
+describe('China UnionPay', function() {
+
+  var test = function(prefix) {
+    // prefix should be a string
+    it('has a prefix of ' + prefix + ' and a length of 16', function() {
+    expect(detectNetwork(prefix + makeString(16 - prefix.length))).to.equal('China UnionPay');
+    });
+
+    it('has a prefix of ' + prefix + ' and a length of 17', function() {
+      expect(detectNetwork(prefix + makeString(17 - prefix.length))).to.equal('China UnionPay');
+    });
+
+    it('has a prefix of ' + prefix + ' and a length of 18', function() {
+      expect(detectNetwork(prefix + makeString(18 - prefix.length))).to.equal('China UnionPay');
+    });
+
+    it('has a prefix of ' + prefix + ' and a length of 19', function() {
+      expect(detectNetwork(prefix + makeString(19 - prefix.length))).to.equal('China UnionPay');
+    });
+  }
+
+  for (var i = 622126; i <= 622925; i++) {
+    test(i.toString());
+  }
+
+  for (var j = 624; j <= 626; j++) {
+    test(j.toString());
+  }
+
+  for (var k = 6282; k <= 6288; k++) {
+    test(k.toString());
+  }
+});
+
+// Switch always has a prefix of 4903, 4905, 4911, 4936, 564182, 633110, 6333, or 6759 and a length of 16, 18, or 19
+describe('Switch', function() {
+  var firstFour = [4903, 4905, 4911, 4936, 6333, 6759];
+  var firstSix = [564182, 633110];
+
+  var test = function(prefix) {
+    // prefix should be a string
+    it('has a prefix of ' + prefix + ' and a length of 16', function() {
+    expect(detectNetwork(prefix + makeString(16 - prefix.length))).to.equal('Switch');
+    });
+
+    it('has a prefix of ' + prefix + ' and a length of 18', function() {
+    expect(detectNetwork(prefix + makeString(18 - prefix.length))).to.equal('Switch');
+    });
+
+    it('has a prefix of ' + prefix + ' and a length of 19', function() {
+    expect(detectNetwork(prefix + makeString(19 - prefix.length))).to.equal('Switch');
+    });
+  }
+
+  for (var i = 0; i < firstFour.length; i++) {
+    test(firstFour[i].toString());
+  }
+
+  for (var j = 0; j < firstSix.length; j++) {
+    test(firstSix[j].toString());
+  }
+});
